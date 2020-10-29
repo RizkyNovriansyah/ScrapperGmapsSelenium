@@ -15,21 +15,22 @@ chrome_options.add_argument('--disable-dev-shm-usage')
 driver = webdriver.Chrome(ChromeDriverManager().install(),chrome_options=chrome_options)
 driver.get('https://www.google.com/maps')
 
-kota = input('kota : ')
-key = input('key : ')
-halaman = input('halaman : ')
-time.sleep(2)
-# kota = "Jakarta"
-# key = "Toko Sepatu"
-
+# kota = input('kota : ')
+# key = input('key : ')
+# halaman = input('halaman : ')
+time.sleep(1)
+kota = "Jakarta"
+key = "Toko Sepatu"
+jumlah = 13
+recorded = 0
 find_key = key+", "+kota
 ActionChains(driver).send_keys(find_key).perform()
 class_find = 'searchbox-searchbutton'
 driver.find_element_by_class_name(class_find).click()
-
+print("Cari : "+find_key)
 nama_tokos = []
-for x in range(int(halaman)):
-    time.sleep(4)
+while recorded <= jumlah:
+    time.sleep(1)
     class_item = 'section-result'
     items = []
     while len(items) == 0:
@@ -42,12 +43,19 @@ for x in range(int(halaman)):
             temp_title = item.find_elements_by_class_name('section-result-title')
         title = temp_title[0].find_element_by_tag_name('span')
         nama_toko = title.text
-        nama_tokos.append(nama_toko)
+        if recorded <= jumlah:
+            is_nama_exist = False
+            for nama_exist in nama_tokos:
+                if nama_toko == nama_exist:
+                    is_nama_exist = True
+            if not is_nama_exist:
+                nama_tokos.append(nama_toko)
+                recorded += 1
 
     driver.find_element_by_class_name('n7lv7yjyC35__button-next-icon').click()
     
 print("Data Recorded : ")
-print(len(nama_tokos))
+print(len(nama_tokos)-1)
 
 class_close = 'gsst_a'
 driver.find_element_by_class_name(class_close).click()
@@ -107,11 +115,14 @@ for nama_toko in nama_tokos:
                 num = False
             if counting_val == 0:
                 detail["alamat"] = val
+                # print("Alamat: ")
+                # print(val)
             elif num:
                 detail["notelp"] = val
-            
+                # print("Notelp: ")
+                # print(val)
+            counting_val += 1    
         all_data.append(detail)
-        counting_val += 1
     except :
         pass
     
@@ -146,5 +157,4 @@ task_id =  timez[0]
 path = "%s.xlsx" % (task_id)
 print(path)
 wb.save("data/"+path)
-# ActionChains(driver).key_up(Keys.ENTER).perform()
 driver.close()
