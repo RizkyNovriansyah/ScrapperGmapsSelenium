@@ -6,15 +6,21 @@ from webdriver_manager.chrome import ChromeDriverManager
 from openpyxl import Workbook
 import os
 # from time import time
+from selenium.webdriver.chrome.options import Options
+chrome_options = Options()
+chrome_options.add_argument('--headless')
+chrome_options.add_argument('--no-sandbox')
+chrome_options.add_argument('--disable-dev-shm-usage')
 
-driver = webdriver.Chrome(ChromeDriverManager().install())
+driver = webdriver.Chrome(ChromeDriverManager().install(),chrome_options=chrome_options)
 driver.get('https://www.google.com/maps')
 
-# kota = input('kota : ')
-# key = input('key : ')
+kota = input('kota : ')
+key = input('key : ')
+halaman = input('halaman : ')
 time.sleep(2)
-kota = "Jakarta"
-key = "Toko Sepatu"
+# kota = "Jakarta"
+# key = "Toko Sepatu"
 
 find_key = key+", "+kota
 ActionChains(driver).send_keys(find_key).perform()
@@ -22,7 +28,7 @@ class_find = 'searchbox-searchbutton'
 driver.find_element_by_class_name(class_find).click()
 
 nama_tokos = []
-for x in range(2):
+for x in range(int(halaman)):
     time.sleep(4)
     class_item = 'section-result'
     items = []
@@ -119,9 +125,12 @@ sheet.append(("No","Nama Toko","Notelp","Alamat"))
 for item in all_data:
     nama = item["nama"]
 
-    alamat = item["alamat"]
-    alamat = alamat.split(": ")
-    alamat = alamat[1]
+    try:
+        alamat = item["alamat"]
+        alamat = alamat.split(": ")
+        alamat = alamat[1]
+    except:
+        alamat = ""
     try:
         notelp = item["notelp"]
         notelp = notelp.split(": ")
