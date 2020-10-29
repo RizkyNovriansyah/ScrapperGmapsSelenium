@@ -15,13 +15,14 @@ chrome_options.add_argument('--disable-dev-shm-usage')
 driver = webdriver.Chrome(ChromeDriverManager().install(),chrome_options=chrome_options)
 driver.get('https://www.google.com/maps')
 
-# kota = input('kota : ')
-# key = input('key : ')
-# halaman = input('halaman : ')
+kota = input('Kota : ')
+key = input('Keyword : ')
+jumlah = input('Jumlah : ')
 time.sleep(1)
-kota = "Jakarta"
-key = "Toko Sepatu"
-jumlah = 13
+# kota = "Jakarta"
+# key = "Toko Sepatu"
+# jumlah = 13
+
 recorded = 0
 find_key = key+", "+kota
 ActionChains(driver).send_keys(find_key).perform()
@@ -29,7 +30,7 @@ class_find = 'searchbox-searchbutton'
 driver.find_element_by_class_name(class_find).click()
 print("Cari : "+find_key)
 nama_tokos = []
-while recorded <= jumlah:
+while recorded <= int(jumlah):
     time.sleep(1)
     class_item = 'section-result'
     items = []
@@ -43,7 +44,7 @@ while recorded <= jumlah:
             temp_title = item.find_elements_by_class_name('section-result-title')
         title = temp_title[0].find_element_by_tag_name('span')
         nama_toko = title.text
-        if recorded <= jumlah:
+        if recorded <= int(jumlah):
             is_nama_exist = False
             for nama_exist in nama_tokos:
                 if nama_toko == nama_exist:
