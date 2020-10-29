@@ -26,7 +26,6 @@ while len(items) == 0:
 
 print(len(items))
 count = 0
-# print(items)
 nama_tokos = []
 for item in items:
     temp_title = []
@@ -45,7 +44,7 @@ for nama_toko in nama_tokos:
     if final_msg == find_key:
         continue
     
-    print("final_msg : ")
+    print("Find : ")
     print(final_msg)
     ActionChains(driver).send_keys(final_msg).perform()
     class_find = 'searchbox-searchbutton'
@@ -63,7 +62,6 @@ for nama_toko in nama_tokos:
                 for t in temp_titles:
                     title = t.find_element_by_tag_name('span')
                     title_temp = title.text 
-                    print(title_temp)
                     if title_temp == nama_toko:
                         t.click() 
                         is_not_exist = False
@@ -85,34 +83,26 @@ for nama_toko in nama_tokos:
     print("detail_nama_toko : ")
     print(detail_nama_toko)
     detail["nama"] = detail_nama_toko
-    # lokasi_toko = driver.find_elements_by_class_name('ugiz4pqJLAG__primary-text')
-    # while lokasi_toko.text == "":
-    #     pass
-    # print("lokasi_toko.text : ")
-    # print(lokasi_toko.text)
 
     btn_detail = driver.find_elements_by_class_name('ugiz4pqJLAG__button')
-    print("lokasi_toko")
-    print(len(btn_detail))
     # Val 1 alamat, 2 notelp
     counting_val = 0 
     for btn in btn_detail:
         val = btn.get_attribute("aria-label")
-        # btn.find_element_by_tag_name('span')
+        if val is not None:
+            num = not "." in val and not "," in val 
+        else:
+            num = False
         if counting_val == 0:
             detail["alamat"] = val
             print("alamat:")
             print(val)
-        elif counting_val == 1:
+        elif num:
             detail["notelp"] = val
             print("notelp:")
             print(val)
         counting_val += 1
-        
-    # while lokasi_toko.text == "":
-    #     pass
-    # print("lokasi_toko.text : ")
-    # print(lokasi_toko.text)
+
     all_data.append(detail)
     class_close = 'sbcb_a'
     driver.find_element_by_class_name(class_close).click()
